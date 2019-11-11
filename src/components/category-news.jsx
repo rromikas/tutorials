@@ -25,11 +25,10 @@ class CategoryNews extends Component {
       var a = new Date(Date.now());
       var year = a.getFullYear();
       var month = a.getMonth();
-      var fMonth = ("0" + month).slice(-2);
       var day = a.getDate();
       var fDay = ("0" + day).slice(-2);
       var date =
-        year.toString() + "-" + fMonth.toString() + "-" + fDay.toString();
+        year.toString() + "-" + month.toString() + "-" + fDay.toString();
 
       console.log(date);
 
@@ -124,17 +123,6 @@ class CategoryNews extends Component {
 
   componentDidMount() {
     this.getNews(this.props.category);
-    var scale = (window.innerWidth / 1500) * this.props.proportion;
-    this.setState({
-      scale: scale
-    });
-    window.addEventListener("resize", () => {
-      var scale = (window.innerWidth / 1500) * this.props.proportion;
-      this.setState({
-        scale: scale,
-        height: this.newParent.getBoundingClientRect().height + 65
-      });
-    });
   }
 
   componentWillMount() {}
@@ -249,10 +237,9 @@ class CategoryNews extends Component {
       <div
         style={{
           display: "inline-block",
-          height: `${this.state.height}px`,
           position: "relative",
           overflow: "hidden",
-          width: `${window.innerWidth * this.props.proportion}px`
+          width: "100%"
         }}
         onMouseMove={e => {
           this.setState({ mouseX: e.screenX, mouseY: e.screenY });
@@ -262,13 +249,16 @@ class CategoryNews extends Component {
         //   this.StopMoveEverything();
         // }}
       >
-        <div
-          className="category-header"
-          style={{
-            width: `${1500 * this.state.scale}px`
-          }}
-        >
-          <h1 style={{ textTransform: "capitalize" }}>{this.props.category}</h1>
+        <div className="category-header">
+          <div
+            style={{
+              textTransform: "capitalize",
+              fontSize: "calc(2em + 1vw)",
+              fontWeight: "500"
+            }}
+          >
+            {this.props.category}
+          </div>
         </div>
         <div
           ref={el => {
@@ -277,10 +267,7 @@ class CategoryNews extends Component {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            flexWrap: "wrap",
-            width: `1500px`,
-            transform: `scale(${this.state.scale})`,
-            transformOrigin: "top left"
+            flexWrap: "wrap"
           }}
         >
           {this.state.articles.map((x, index) => {
@@ -301,7 +288,7 @@ class CategoryNews extends Component {
                 }}
                 key={index}
                 style={
-                  (index + 5) % 5 === 0 || this.props.proportion < 0.7
+                  (index + 5) % 5 === 0 || this.props.proportion < 0.7 // bus 100 % jei tai bus sonine naujiena arba tai bus kas penkta pagrindine naujiena
                     ? {
                         flex: "100%",
                         marginBottom: "50px",
@@ -318,7 +305,7 @@ class CategoryNews extends Component {
                             : this.state.static.zIndex
                       }
                     : {
-                        width: "730px",
+                        width: "50%",
                         marginBottom: "50px",
                         textAlign: "left",
                         transform:
@@ -338,22 +325,19 @@ class CategoryNews extends Component {
                   style={{
                     backgroundImage: `url("${x.urlToImage}")`,
                     backgroundSize: "cover",
-                    width:
-                      (index + 5) % 5 === 0 || this.props.proportion < 0.7
-                        ? `1500px`
-                        : `730px`,
-                    height:
-                      (index + 5) % 5 === 0 || this.props.proportion < 0.7
-                        ? "800px"
-                        : "450px"
+                    width: "100%",
+                    paddingBottom: "60%"
                   }}
                 ></div>
 
                 <a
                   href={x.url}
+                  className={
+                    (index + 5) % 5 === 0 || this.props.proportion < 0.7
+                      ? "main-title"
+                      : "secondary-title"
+                  }
                   style={{
-                    fontSize:
-                      this.props.proportion < 0.7 ? `${2.8 * 2}em` : `${2.8}em`,
                     marginBottom: "20px"
                   }}
                 >
@@ -363,10 +347,11 @@ class CategoryNews extends Component {
 
                 <a
                   href={x.url}
-                  style={{
-                    fontSize:
-                      this.props.proportion < 0.7 ? `${2.8}em` : `${1.4}em`
-                  }}
+                  className={
+                    this.props.proportion < 0.7
+                      ? "secondary-reference"
+                      : "main-reference"
+                  }
                 >
                   {x.author} published on {x.source.name} /{" "}
                   <time dateTime={x.publishedAt}>

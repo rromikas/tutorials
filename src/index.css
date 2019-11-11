@@ -7,6 +7,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+[stroke="url(#someGradientId)"] {
+  stroke: BLUE;
+  z-index: -2;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -22,7 +27,6 @@ code {
 }
 
 .category-header {
-  height: 65px;
   width: 100%;
   text-align: left;
   margin-bottom: 10px;
@@ -33,6 +37,46 @@ code {
   content: "";
   width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: -10px;
   border-bottom: 10px solid darkcyan;
+}
+
+h1 {
+  font-size: calc(2em + 1vw) !important;
+}
+
+.secondary-title {
+  font-size: calc(0.5em + 1vw);
+  font-weight: 500;
+  color: #333;
+}
+
+.secondary-reference {
+  font-size: calc(0.2em + 1vw);
+  color: #333;
+}
+
+.main-title {
+  font-size: calc(1.2em + 1vw);
+  font-weight: 500;
+  color: #333;
+}
+
+.main-reference {
+  font-size: calc(0.2em + 1.2vw);
+  color: #333;
+}
+
+.main-secondary-title {
+  font-size: calc(1em + 1vw);
+  font-weight: 500;
+  color: #333;
+}
+
+.secondary-reference:hover,
+.secondary-title:hover,
+.main-reference:hover,
+.main-title:hover {
+  color: #111 !important;
+  text-decoration: none !important;
 }

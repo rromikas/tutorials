@@ -4,7 +4,7 @@ import firebase from "../firebase";
 const apiKey = "cf5f4e280b214b5285aa823a72b896cc";
 
 class Feed extends Component {
-  state = { main: "", categories: {} };
+  state = { main: "", categories: {}, outerWidth: window.outerWidth };
 
   categories = {};
 
@@ -16,7 +16,18 @@ class Feed extends Component {
     window.scrollTo(0, 0);
   };
 
+  onResize = () => {
+    if (this.state.outerWidth !== window.outerWidth) {
+      this.setState({ outerWidth: window.outerWidth });
+    }
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.onResize);
+  }
+
   componentDidMount() {
+    window.addEventListener("resize", this.onResize);
     if (this.state.main === "") {
       this.getFromDatabase("newsCategories").then(cats => {
         if (
@@ -57,45 +68,57 @@ class Feed extends Component {
 
   render() {
     return (
-      <table style={{ width: "100%" }}>
-        <tr>
-          <td style={{ width: "70%", verticalAlign: "top" }}>
-            {this.state.main !== "" ? (
-              <CatgeroyNews
-                category={this.state.main}
-                proportion={0.7}
-              ></CatgeroyNews>
-            ) : (
-              ""
-            )}
-          </td>
-          <td style={{ width: "30%", verticalAlign: "top" }}>
-            {Object.keys(this.state.categories).map(x => {
-              return (
-                <div>
-                  <CatgeroyNews category={x} proportion={0.2}></CatgeroyNews>
-                  <button
-                    className="btn-block btn"
-                    style={{
-                      borderBottom: "10px solid darkcyan",
-                      borderRadius: "unset",
-                      margin: "20px",
-                      width: "70%",
-                      margin: "0 auto 50px auto",
-                      fontSize: "1.4em"
-                    }}
-                    onClick={() => {
-                      this.changeCategory(x);
-                    }}
-                  >
-                    > {x}
-                  </button>
-                </div>
-              );
-            })}
-          </td>
-        </tr>
-      </table>
+      <div style={{ width: "100%", maxWidth: "1400px", margin: "auto" }}>
+        <div
+          style={{
+            width: this.state.outerWidth < 800 ? "100%" : "70%",
+            display: "inline-block",
+            verticalAlign: "top",
+            padding: "5px"
+          }}
+        >
+          {this.state.main !== "" ? (
+            <CatgeroyNews
+              category={this.state.main}
+              proportion={this.state.outerWidth < 800 ? 1 : 0.7}
+            ></CatgeroyNews>
+          ) : (
+            ""
+          )}
+        </div>
+        <div
+          style={{
+            width: "30%",
+            display: this.state.outerWidth < 800 ? "none" : "inline-block",
+            verticalAlign: "top",
+            padding: "5px"
+          }}
+        >
+          {Object.keys(this.state.categories).map(x => {
+            return (
+              <div>
+                <CatgeroyNews category={x} proportion={0.2}></CatgeroyNews>
+                <button
+                  className="btn-block btn"
+                  style={{
+                    borderBottom: "10px solid darkcyan",
+                    borderRadius: "unset",
+                    margin: "20px",
+                    width: "70%",
+                    margin: "0 auto 50px auto",
+                    fontSize: "1.4em"
+                  }}
+                  onClick={() => {
+                    this.changeCategory(x);
+                  }}
+                >
+                  > {x}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     );
   }
 }
