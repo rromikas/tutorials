@@ -115,10 +115,6 @@ class CategoryNews extends Component {
     });
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.getNews(nextProps.category);
-  }
-
   componentWillUnmount() {}
 
   componentDidMount() {
@@ -126,15 +122,6 @@ class CategoryNews extends Component {
   }
 
   componentWillMount() {}
-
-  setParentReference = el => {
-    if (el !== null) {
-      this.newParent = el;
-      this.setState({
-        height: this.newParent.getBoundingClientRect().height + 65
-      });
-    }
-  };
 
   setReference = (el, index) => {
     if (el !== null) {
@@ -146,11 +133,7 @@ class CategoryNews extends Component {
     this.getFromDatabase("news/" + category + "/updated").then(data => {
       console.log(Date.now(), data, Date.now() - data > 3600 * 4 * 1000);
       if (Date.now() - data > 3600 * 4 * 1000) {
-        this.requestNews().then(ans => {
-          this.setState({
-            height: this.newParent.getBoundingClientRect().height + 65
-          });
-        });
+        this.requestNews();
       } else {
         this.getFromDatabase("news/" + category + "/articles").then(
           articles => {
@@ -164,11 +147,6 @@ class CategoryNews extends Component {
                 this.setState({ articles: articles });
               }
             }
-
-            this.setState({
-              height: this.newParent.getBoundingClientRect().height + 65
-            });
-            console.log(this.newParent.getBoundingClientRect());
           }
         );
       }
