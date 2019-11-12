@@ -3,8 +3,19 @@ import firebase from "../firebase";
 
 class Navbar extends Component {
   state = {
-    newCategory: ""
+    newCategory: "",
+    categories: {}
   };
+
+  componentDidMount() {
+    firebase
+      .database()
+      .ref("newsCategories")
+      .limitToLast(10)
+      .once("value", snapshot => {
+        this.setState({ categories: snapshot.val() });
+      });
+  }
 
   updateDatabase = updates => {
     return new Promise((resolve, reject) => {
@@ -29,12 +40,14 @@ class Navbar extends Component {
   };
 
   addCategory = () => {
-    var updates = {};
-    updates["news/" + this.state.newCategory + "/updated"] = 0;
-    updates[
-      "newsCategories/" + this.state.newCategory
-    ] = this.state.newCategory;
-    this.updateDatabase(updates);
+    if (this.state.newCategory !== "") {
+      var updates = {};
+      updates["news/" + this.state.newCategory + "/updated"] = 0;
+      updates[
+        "newsCategories/" + this.state.newCategory
+      ] = this.state.newCategory;
+      this.updateDatabase(updates);
+    }
   };
 
   render() {
@@ -44,19 +57,26 @@ class Navbar extends Component {
           height: "50px",
           background: "darkcyan",
           display: "flex",
-          alignItems: "center"
+          alignItems: "center",
+          justifyContent: "space-around"
         }}
       >
-        <input
-          className="form-control"
-          style={{ width: "200px" }}
-          onChange={e => {
-            this.setState({ newCategory: e.target.value });
-          }}
-        ></input>
-        <button className="btn btn-danger" onClick={() => this.addCategory()}>
-          Add category
-        </button>
+        <div className="input-group" style={{ width: "300px" }}>
+          <input
+            className="form-control"
+            onChange={e => {
+              this.setState({ newCategory: e.target.value });
+            }}
+          ></input>
+          <button className="btn btn-danger" onClick={() => this.addCategory()}>
+            Add category
+          </button>
+        </div>
+        {Object.keys(this.state.categories).map(x => {
+          return (
+            <div style={{ color: "white" }}>{this.state.categories[x]}</div>
+          );
+        })}
       </div>
     );
   }

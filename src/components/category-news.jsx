@@ -315,7 +315,7 @@ class CategoryNews extends Component {
                 <a
                   href={x.url}
                   className={
-                    (index + 5) % 5 === 0 || this.props.proportion < 0.7
+                    (index + 5) % 5 === 0 && this.props.proportion >= 0.7
                       ? "main-title"
                       : "secondary-title"
                   }

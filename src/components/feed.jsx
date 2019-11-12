@@ -29,18 +29,24 @@ class Feed extends Component {
   componentDidMount() {
     window.addEventListener("resize", this.onResize);
     if (this.state.main === "") {
-      this.getFromDatabase("newsCategories").then(cats => {
-        if (
-          cats !== null &&
-          cats !== undefined &&
-          Object.keys(cats).length !== 0
-        ) {
-          this.categories = JSON.parse(JSON.stringify(cats));
-          var main = cats[Object.keys(cats)[0]];
-          delete cats[Object.keys(cats)[0]];
-          this.setState({ categories: cats, main: main });
-        }
-      });
+      firebase
+        .database()
+        .ref("newsCategories")
+        .limitToLast(10)
+        .once("value", snapshot => {
+          var cats = snapshot.val();
+          console.log(cats);
+          if (
+            cats !== null &&
+            cats !== undefined &&
+            Object.keys(cats).length !== 0
+          ) {
+            this.categories = JSON.parse(JSON.stringify(cats));
+            var main = cats[Object.keys(cats)[0]];
+            delete cats[Object.keys(cats)[0]];
+            this.setState({ categories: cats, main: main });
+          }
+        });
     }
   }
 
