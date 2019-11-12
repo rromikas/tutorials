@@ -33,7 +33,7 @@ class CategoryNews extends Component {
       console.log(date);
 
       fetch(
-        `/api/v2/everything?qInTitle="${q}"&from=${date}&sortBy=publishedAt&language=en&apiKey=cf5f4e280b214b5285aa823a72b896cc`,
+        `/v2/everything?qInTitle="${q}"&from=${date}&sortBy=publishedAt&language=en&apiKey=cf5f4e280b214b5285aa823a72b896cc`,
         {
           method: "GET",
           headers: {
