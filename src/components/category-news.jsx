@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "../firebase";
-
+import axios from "axios";
 class CategoryNews extends Component {
   state = {
     articles: [],
@@ -32,18 +32,22 @@ class CategoryNews extends Component {
 
       console.log(date);
 
-      fetch(
-        `https://newsapi.org/v2/everything?qInTitle="${q}"&from=${date}&sortBy=publishedAt&language=en&apiKey=cf5f4e280b214b5285aa823a72b896cc`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          }
-        }
-      )
+      // fetch(
+      //   `https://newsapi.org/v2/everything?qInTitle="${q}"&from=${date}&sortBy=publishedAt&language=en&apiKey=cf5f4e280b214b5285aa823a72b896cc`,
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json"
+      //     }
+      //   }
+      // )
+      axios
+        .get(
+          `https://newsapi.org/v2/everything?qInTitle="${q}"&from=${date}&sortBy=publishedAt&language=en&apiKey=cf5f4e280b214b5285aa823a72b896cc`
+        )
         .then(data => {
-          return data.json();
+          return data.data;
         })
         .then(data => {
           this.getFromDatabase(
