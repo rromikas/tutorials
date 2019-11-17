@@ -83,6 +83,7 @@ class Graph extends Component {
           y2: this.state.points[j].y,
           kelias: kelias
         };
+
         lines.push(line);
       }
     }
@@ -94,15 +95,13 @@ class Graph extends Component {
     var matrica = [];
     for (var i = 0; i < this.state.points.length; i++) {
       var eile = [];
-
       for (var j = 0; j < this.state.points.length; j++) {
         var a = this.state.points[i].x - this.state.points[j].x;
         var b = this.state.points[i].y - this.state.points[j].y;
-        var kelias = Math.sqrt(a * a + b * b);
-        var obj = { eil: i, stulp: j, kelias: kelias };
+        var keliuks = Math.sqrt(a * a + b * b);
+        var obj = { eil: i, stulp: j, kelias: keliuks };
         eile.push(obj);
       }
-
       matrica.push(eile);
     }
 
@@ -160,9 +159,6 @@ class Graph extends Component {
         calculated: true,
         colors: colors
       });
-
-      console.log(matrica, points);
-      this.rastiVisusKelius();
     }
   };
 
@@ -237,9 +233,10 @@ class Graph extends Component {
             left: 0
           }}
         >
-          {this.state.colors.map(color => {
+          {this.state.colors.map((color, index) => {
             return (
               <div
+                key={`color-${color}-${index}`}
                 style={{
                   display: "inline-block",
                   width: "40px",
@@ -273,7 +270,7 @@ class Graph extends Component {
         >
           {this.state.lines.map((line, index) => {
             return (
-              <text text-anchor="middle" dy="-10px">
+              <text textAnchor="middle" dy="-10px" key={`textPath-${index}`}>
                 <textPath
                   startOffset="50%"
                   style={{ fontSize: "20px" }}
@@ -288,9 +285,10 @@ class Graph extends Component {
             ? this.state.lines.map((line, index) => {
                 return (
                   <path
+                    key={`line-${index}`}
                     style={{
                       strokeWidth: "4px",
-                      strokeDasharray: "20",
+                      strokeDasharray: "12",
                       stroke: "black"
                     }}
                     id={`line-${index}`}
@@ -310,13 +308,25 @@ class Graph extends Component {
           }
           {this.state.points.map((x, index) => {
             return (
-              <g>
+              <g key={`point-${index}`}>
                 <circle
+                  onMouseOut={() => {
+                    this.setState({ lines: this.allLines });
+                  }}
+                  onMouseOver={() => {
+                    var lines = this.state.lines.filter(
+                      y =>
+                        (y.x1 === x.x && y.y1 === x.y) ||
+                        (y.x2 === x.x && y.y2 === x.y)
+                    );
+                    this.allLines = this.state.lines;
+                    this.setState({ lines: lines });
+                  }}
                   cx={x.x}
                   cy={x.y}
                   r="20"
                   stroke="black"
-                  stroke-width="3"
+                  strokeWidth="3"
                   fill={colorArray[index]}
                 ></circle>
                 {index === 0 ? (

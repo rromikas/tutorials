@@ -7,10 +7,6 @@ import Navbar from "./components/navbar";
 import Dashboard from "./components/dashboard";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3000/bananas");
-
-socket.on("connect", socket => {});
-
 function App() {
   return (
     <div
