@@ -166,8 +166,10 @@ class Graph extends Component {
     return (
       <div
         style={{
-          width: "800px",
-          height: "400px",
+          width: "100%",
+          height: "100%",
+          maxWidth: "800px",
+          maxHeight: "400px",
           border: "2px solid black",
           position: "relative"
         }}
@@ -249,8 +251,8 @@ class Graph extends Component {
           })}
         </div>
         <svg
-          width="800px"
-          height="400px"
+          width="100%"
+          height="100%"
           ref={el => {
             this.svg = el;
           }}
@@ -260,6 +262,7 @@ class Graph extends Component {
             var left = position.left;
             var top = position.top;
             console.log(left, top);
+            console.log("screnx", e.screenX);
             var x = e.screenX - left;
             var y = e.screenY - top - 70;
             var pnts = this.state.points;
