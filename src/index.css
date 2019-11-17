@@ -80,3 +80,15 @@ h1 {
   color: #111 !important;
   text-decoration: none !important;
 }
+
+.path {
+  stroke-dasharray: 5000;
+  stroke-dashoffset: 5000;
+  animation: dash 5s linear forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
